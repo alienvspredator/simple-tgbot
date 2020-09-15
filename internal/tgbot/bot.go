@@ -18,7 +18,7 @@ type Bot struct {
 
 // New builds a new bot application.
 func New(env *serverenv.ServerEnv, config *Config) *Bot {
-	api := tbot.New(config.TelegramToken)
+	api := tbot.New(config.TelegramToken /*, tbot.WithWebhook("", ":"+config.WebhookPort)*/)
 	return &Bot{api: api}
 }
 

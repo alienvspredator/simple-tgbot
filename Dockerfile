@@ -28,6 +28,7 @@ RUN strip /bin/service
 RUN upx -q -9 /bin/service
 
 FROM scratch
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /bin/service /bin/service
 
 ENTRYPOINT ["/bin/service"]

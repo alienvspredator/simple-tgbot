@@ -8,6 +8,7 @@ type Config struct {
 
 	TelegramToken string `env:"TG_TOKEN"`
 	Debug         bool   `env:"LOG_DEBUG, default=false"`
+	WebhookPort   string `env:"PORT"`
 }
 
 func (c *Config) SecretManagerConfig() *secrets.Config {
