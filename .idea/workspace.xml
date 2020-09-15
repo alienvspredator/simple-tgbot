@@ -10,9 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d8f2b7-5be9-4e5b-9fd3-d0dfa14cb382" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="80d8f2b7-5be9-4e5b-9fd3-d0dfa14cb382" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,6 +129,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init" />
@@ -185,9 +184,10 @@
       <screen x="0" y="23" width="1680" height="946" />
     </state>
     <state width="1638" height="313" key="GridCell.Tab.1.right/0.23.1680.946@0.23.1680.946" timestamp="1600129087177" />
-    <state x="440" y="236" key="Vcs.Push.Dialog.v2" timestamp="1600128664905">
-      <screen x="0" y="23" width="1680" height="946" />
+    <state x="440" y="236" key="Vcs.Push.Dialog.v2" timestamp="1600129184330">
+      <screen x="0" y="0" width="1680" height="1050" />
     </state>
+    <state x="440" y="236" key="Vcs.Push.Dialog.v2/0.0.1680.1050@0.0.1680.1050" timestamp="1600129184330" />
     <state x="440" y="236" key="Vcs.Push.Dialog.v2/0.23.1680.946@0.23.1680.946" timestamp="1600128664905" />
     <state x="638" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600128731864">
       <screen x="0" y="23" width="1680" height="946" />
