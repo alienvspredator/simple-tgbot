@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="80d8f2b7-5be9-4e5b-9fd3-d0dfa14cb382" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/simple-tgbot.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd/tgbot/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logging/logger.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/logging/logger_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/serverenv/env.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/serverenv/env_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/setup/setup.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/setup/setup_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/tgbot/bot.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/tgbot/bot_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/tgbot/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/build.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +134,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init" />
-    <option name="LAST_COMMIT_MESSAGE" value="Init" />
+    <MESSAGE value="workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="workspace.xml" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -162,42 +153,54 @@
       <screen x="0" y="23" width="1680" height="946" />
     </state>
     <state x="694" y="240" key="EnvironmentVariablesDialog/0.23.1680.946@0.23.1680.946" timestamp="1600116725803" />
-    <state width="1638" height="253" key="GridCell.Tab.0.bottom" timestamp="1600125935854">
+    <state width="1638" height="313" key="GridCell.Tab.0.bottom" timestamp="1600129087176">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="253" key="GridCell.Tab.0.bottom/0.23.1680.946@0.23.1680.946" timestamp="1600125935854" />
-    <state width="1638" height="253" key="GridCell.Tab.0.center" timestamp="1600125935853">
+    <state width="1638" height="313" key="GridCell.Tab.0.bottom/0.23.1680.946@0.23.1680.946" timestamp="1600129087176" />
+    <state width="1638" height="313" key="GridCell.Tab.0.center" timestamp="1600129087174">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="253" key="GridCell.Tab.0.center/0.23.1680.946@0.23.1680.946" timestamp="1600125935853" />
-    <state width="1638" height="253" key="GridCell.Tab.0.left" timestamp="1600125935852">
+    <state width="1638" height="313" key="GridCell.Tab.0.center/0.23.1680.946@0.23.1680.946" timestamp="1600129087174" />
+    <state width="1638" height="313" key="GridCell.Tab.0.left" timestamp="1600129087174">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="253" key="GridCell.Tab.0.left/0.23.1680.946@0.23.1680.946" timestamp="1600125935852" />
-    <state width="1638" height="253" key="GridCell.Tab.0.right" timestamp="1600125935853">
+    <state width="1638" height="313" key="GridCell.Tab.0.left/0.23.1680.946@0.23.1680.946" timestamp="1600129087174" />
+    <state width="1638" height="313" key="GridCell.Tab.0.right" timestamp="1600129087175">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="253" key="GridCell.Tab.0.right/0.23.1680.946@0.23.1680.946" timestamp="1600125935853" />
-    <state width="1638" height="313" key="GridCell.Tab.1.bottom" timestamp="1600122589451">
+    <state width="1638" height="313" key="GridCell.Tab.0.right/0.23.1680.946@0.23.1680.946" timestamp="1600129087175" />
+    <state width="1638" height="313" key="GridCell.Tab.1.bottom" timestamp="1600129087177">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="313" key="GridCell.Tab.1.bottom/0.23.1680.946@0.23.1680.946" timestamp="1600122589451" />
-    <state width="1638" height="313" key="GridCell.Tab.1.center" timestamp="1600122589450">
+    <state width="1638" height="313" key="GridCell.Tab.1.bottom/0.23.1680.946@0.23.1680.946" timestamp="1600129087177" />
+    <state width="1638" height="313" key="GridCell.Tab.1.center" timestamp="1600129087177">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="313" key="GridCell.Tab.1.center/0.23.1680.946@0.23.1680.946" timestamp="1600122589450" />
-    <state width="1638" height="313" key="GridCell.Tab.1.left" timestamp="1600122589450">
+    <state width="1638" height="313" key="GridCell.Tab.1.center/0.23.1680.946@0.23.1680.946" timestamp="1600129087177" />
+    <state width="1638" height="313" key="GridCell.Tab.1.left" timestamp="1600129087176">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="313" key="GridCell.Tab.1.left/0.23.1680.946@0.23.1680.946" timestamp="1600122589450" />
-    <state width="1638" height="313" key="GridCell.Tab.1.right" timestamp="1600122589451">
+    <state width="1638" height="313" key="GridCell.Tab.1.left/0.23.1680.946@0.23.1680.946" timestamp="1600129087176" />
+    <state width="1638" height="313" key="GridCell.Tab.1.right" timestamp="1600129087177">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
-    <state width="1638" height="313" key="GridCell.Tab.1.right/0.23.1680.946@0.23.1680.946" timestamp="1600122589451" />
+    <state width="1638" height="313" key="GridCell.Tab.1.right/0.23.1680.946@0.23.1680.946" timestamp="1600129087177" />
+    <state x="440" y="236" key="Vcs.Push.Dialog.v2" timestamp="1600128664905">
+      <screen x="0" y="23" width="1680" height="946" />
+    </state>
+    <state x="440" y="236" key="Vcs.Push.Dialog.v2/0.23.1680.946@0.23.1680.946" timestamp="1600128664905" />
+    <state x="638" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600128731864">
+      <screen x="0" y="23" width="1680" height="946" />
+    </state>
+    <state x="638" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.946@0.23.1680.946" timestamp="1600128731864" />
     <state x="380" y="232" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1600121855965">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
     <state x="380" y="232" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1680.946@0.23.1680.946" timestamp="1600121855965" />
+    <state x="662" y="397" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1600128653381">
+      <screen x="0" y="23" width="1680" height="946" />
+    </state>
+    <state x="662" y="397" key="git4idea.remote.GitConfigureRemotesDialog/0.23.1680.946@0.23.1680.946" timestamp="1600128653381" />
     <state x="505" y="230" width="670" height="676" key="search.everywhere.popup" timestamp="1600123981814">
       <screen x="0" y="23" width="1680" height="946" />
     </state>
