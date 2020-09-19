@@ -4,7 +4,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 
@@ -43,8 +42,6 @@ func realMain(ctx context.Context) error {
 	bot := tgbot.New(env, &config)
 
 	log.Info("starting bot")
-
-	go http.ListenAndServe(":"+config.WebhookPort, nil)
 
 	return bot.Serve(ctx)
 }
