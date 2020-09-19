@@ -5,11 +5,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/alienvspredator/simple-tgbot/internal/database"
 	"github.com/alienvspredator/simple-tgbot/internal/logging"
 	"github.com/alienvspredator/simple-tgbot/internal/secrets"
 	"github.com/alienvspredator/simple-tgbot/internal/serverenv"
 	"github.com/sethvargo/go-envconfig"
 )
+
+// DatabaseConfigProvider ensures that the environment config can provide a DB config.
+// All binaries in this application connect to the database via the same method.
+type DatabaseConfigProvider interface {
+	DatabaseConfig() *database.Config
+}
 
 // SecretManagerConfigProvider signals that the config knows how to configure a
 // secret manager.
@@ -89,6 +96,20 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 		return nil, fmt.Errorf("load environment vars: %w", err)
 	}
 	log.Infow("provided", "config", config)
+
+	// Setup the database connection
+	if provider, ok := config.(DatabaseConfigProvider); ok {
+		log.Info("configuring database")
+
+		dbConfig := provider.DatabaseConfig()
+		db, err := database.NewFromEnv(ctx, dbConfig)
+		if err != nil {
+			return nil, fmt.Errorf("database connecting: %w", err)
+		}
+
+		serverEnvOpts = append(serverEnvOpts, serverenv.WithDatabase(db))
+		log.Infow("database", "config", dbConfig)
+	}
 
 	return serverenv.New(ctx, serverEnvOpts...), nil
 }
