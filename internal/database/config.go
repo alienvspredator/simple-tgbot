@@ -47,7 +47,7 @@ func (c *Config) ConnectionURL() string {
 	}
 
 	u := &url.URL{
-		Scheme: "postgres",
+		Scheme: "cockroachdb",
 		User:   url.UserPassword(c.User, c.Password),
 		Host:   host,
 		Path:   c.Name,
