@@ -11,6 +11,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/markbates/pkger"
 	"github.com/sethvargo/go-signalcontext"
+	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
 	_ "github.com/golang-migrate/migrate/v4/database/cockroachdb"
@@ -20,13 +21,17 @@ import (
 
 func main() {
 	ctx, done := signalcontext.OnInterrupt()
-	log := logging.NewLogger(false)
 
-	ctx = logging.WithLogger(ctx, log)
+	ctx = logging.WithLogger(ctx, logging.NewLogger())
 
 	err := realMain(ctx)
 	done()
 
+	log := logging.FromContext(ctx)
+
+	if syncErr := log.Sync(); syncErr != nil {
+		err = multierr.Append(err, syncErr)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +41,7 @@ func realMain(ctx context.Context) error {
 	log := logging.FromContext(ctx)
 
 	var config database.Config
-	env, err := setup.Setup(ctx, &config)
+	ctx, env, err := setup.Setup(ctx, &config)
 	if err != nil {
 		return fmt.Errorf("setup database: %w", err)
 	}

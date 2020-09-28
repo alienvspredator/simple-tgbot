@@ -9,6 +9,7 @@ import (
 	"github.com/alienvspredator/simple-tgbot/internal/logging"
 	"github.com/alienvspredator/simple-tgbot/internal/secrets"
 	"github.com/alienvspredator/simple-tgbot/internal/serverenv"
+	"github.com/alienvspredator/simple-tgbot/internal/zapfluentd"
 	"github.com/sethvargo/go-envconfig"
 )
 
@@ -24,8 +25,12 @@ type SecretManagerConfigProvider interface {
 	SecretManagerConfig() *secrets.Config
 }
 
+type FluentConfigProvider interface {
+	FluentConfig() *zapfluentd.Config
+}
+
 // Setup runs common initialization code for all servers. See SetupWith.
-func Setup(ctx context.Context, config interface{}) (*serverenv.ServerEnv, error) {
+func Setup(ctx context.Context, config interface{}) (context.Context, *serverenv.ServerEnv, error) {
 	return SetupWith(ctx, config, envconfig.OsLookuper())
 }
 
@@ -34,7 +39,7 @@ func Setup(ctx context.Context, config interface{}) (*serverenv.ServerEnv, error
 // accessing app configs. The provided interface must implement the various
 // interfaces.
 func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
-	*serverenv.ServerEnv, error,
+	context.Context, *serverenv.ServerEnv, error,
 ) {
 	log := logging.FromContext(ctx)
 
@@ -58,20 +63,20 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 		// plaintext string.
 		smConfig := provider.SecretManagerConfig()
 		if err := envconfig.ProcessWith(ctx, smConfig, l, mutatorFuncs...); err != nil {
-			return nil, fmt.Errorf("unable to process secret manager env: %w", err)
+			return ctx, nil, fmt.Errorf("unable to process secret manager env: %w", err)
 		}
 
 		var err error
 		sm, err = secrets.SecretManagerFor(ctx, smConfig.SecretManagerType)
 		if err != nil {
-			return nil, fmt.Errorf("unable to connect to secret manager: %w", err)
+			return ctx, nil, fmt.Errorf("unable to connect to secret manager: %w", err)
 		}
 
 		// Enable caching, if a TTL was provided.
 		if ttl := smConfig.SecretCacheTTL; ttl > 0 {
 			sm, err = secrets.WrapCacher(ctx, sm, ttl)
 			if err != nil {
-				return nil, fmt.Errorf("unable to create secret manager cache: %w", err)
+				return ctx, nil, fmt.Errorf("unable to create secret manager cache: %w", err)
 			}
 		}
 
@@ -79,7 +84,7 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 		if smConfig.SecretExpansion {
 			sm, err = secrets.WrapJSONExpander(ctx, sm)
 			if err != nil {
-				return nil, fmt.Errorf("unable to create json expander secret manager: %w", err)
+				return ctx, nil, fmt.Errorf("unable to create json expander secret manager: %w", err)
 			}
 		}
 
@@ -93,9 +98,22 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 	}
 
 	if err := envconfig.ProcessWith(ctx, config, l, mutatorFuncs...); err != nil {
-		return nil, fmt.Errorf("load environment vars: %w", err)
+		return ctx, nil, fmt.Errorf("load environment vars: %w", err)
 	}
 	log.Infow("provided", "config", config)
+
+	if provider, ok := config.(FluentConfigProvider); ok {
+		log.Info("configuring fluent")
+
+		fConf := provider.FluentConfig()
+		if fConf.Host != "" {
+			ws, err := zapfluentd.NewWriteSyncer(fConf)
+			if err != nil {
+				return ctx, nil, fmt.Errorf("zap fluentd WriteSyncer initializing: %w", err)
+			}
+			ctx = logging.WithLogger(ctx, logging.NewLogger(logging.WithWriteSyncer(ws)))
+		}
+	}
 
 	// Setup the database connection
 	if provider, ok := config.(DatabaseConfigProvider); ok {
@@ -104,12 +122,12 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 		dbConfig := provider.DatabaseConfig()
 		db, err := database.NewFromEnv(ctx, dbConfig)
 		if err != nil {
-			return nil, fmt.Errorf("database connecting: %w", err)
+			return ctx, nil, fmt.Errorf("database connecting: %w", err)
 		}
 
 		serverEnvOpts = append(serverEnvOpts, serverenv.WithDatabase(db))
 		log.Infow("database", "config", dbConfig)
 	}
 
-	return serverenv.New(ctx, serverEnvOpts...), nil
+	return ctx, serverenv.New(ctx, serverEnvOpts...), nil
 }

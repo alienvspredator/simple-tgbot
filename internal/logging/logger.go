@@ -39,29 +39,67 @@ var (
 	defaultLoggerOnce sync.Once
 )
 
+type config struct {
+	debug bool
+	ws    zapcore.WriteSyncer
+}
+
+type Option func(cfg config) config
+
+func WithDebugEnabled(enabled bool) Option {
+	return func(cfg config) config {
+		cfg.debug = enabled
+		return cfg
+	}
+}
+
+func WithWriteSyncer(ws zapcore.WriteSyncer) Option {
+	return func(cfg config) config {
+		cfg.ws = zapcore.NewMultiWriteSyncer(cfg.ws, ws)
+		return cfg
+	}
+}
+
 // NewLogger creates a new logger with the given configuration.
-func NewLogger(debug bool) *zap.SugaredLogger {
-	config := &zap.Config{
-		Level:            zap.NewAtomicLevelAt(zap.InfoLevel),
-		Development:      false,
-		Sampling:         samplingConfig,
-		Encoding:         encodingJSON,
-		EncoderConfig:    encoderConfig,
-		OutputPaths:      outputStderr,
-		ErrorOutputPaths: outputStderr,
-	}
-
-	// Add more details if logging is in debug mode.
-	if debug {
-		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-		config.Development = true
-		config.Sampling = nil
-	}
-
-	logger, err := config.Build()
+func NewLogger(opts ...Option) *zap.SugaredLogger {
+	sink, closeOut, err := zap.Open(outputStderr...)
 	if err != nil {
-		logger = zap.NewNop()
+		return zap.NewNop().Sugar()
 	}
+	closeOut()
+
+	zapOpts := []zap.Option{zap.ErrorOutput(sink)}
+
+	cfg := config{
+		debug: false,
+		ws:    sink,
+	}
+	for _, apply := range opts {
+		cfg = apply(cfg)
+	}
+
+	lvl := zap.NewAtomicLevelAt(zap.InfoLevel)
+	if cfg.debug {
+		zapOpts = append(zapOpts, zap.Development())
+		lvl = zap.NewAtomicLevelAt(zap.DebugLevel)
+	} else {
+		zapOpts = append(zapOpts, zap.WrapCore(func(core zapcore.Core) zapcore.Core {
+			var samplerOpts []zapcore.SamplerOption
+			if samplingConfig.Hook != nil {
+				samplerOpts = append(samplerOpts, zapcore.SamplerHook(samplingConfig.Hook))
+			}
+			return zapcore.NewSamplerWithOptions(
+				core,
+				time.Second,
+				samplingConfig.Initial,
+				samplingConfig.Thereafter,
+				samplerOpts...,
+			)
+		}))
+	}
+
+	core := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), cfg.ws, lvl)
+	logger := zap.New(core, zapOpts...)
 
 	return logger.Sugar()
 }
@@ -69,7 +107,7 @@ func NewLogger(debug bool) *zap.SugaredLogger {
 // DefaultLogger returns the default logger for the package.
 func DefaultLogger() *zap.SugaredLogger {
 	defaultLoggerOnce.Do(func() {
-		defaultLogger = NewLogger(false)
+		defaultLogger = NewLogger()
 	})
 	return defaultLogger
 }
