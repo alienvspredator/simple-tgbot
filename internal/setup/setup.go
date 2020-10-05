@@ -7,6 +7,8 @@ import (
 
 	"github.com/alienvspredator/simple-tgbot/internal/database"
 	"github.com/alienvspredator/simple-tgbot/internal/logging"
+	"github.com/alienvspredator/simple-tgbot/internal/observability"
+	"github.com/alienvspredator/simple-tgbot/internal/observability/views"
 	"github.com/alienvspredator/simple-tgbot/internal/secrets"
 	"github.com/alienvspredator/simple-tgbot/internal/serverenv"
 	"github.com/alienvspredator/simple-tgbot/internal/zapfluentd"
@@ -17,6 +19,12 @@ import (
 // All binaries in this application connect to the database via the same method.
 type DatabaseConfigProvider interface {
 	DatabaseConfig() *database.Config
+}
+
+// ObservabilityExporterConfigProvider signals that the config knows how to configure an
+// observability exporter.
+type ObservabilityExporterConfigProvider interface {
+	ObservabilityExporterConfig() *observability.Config
 }
 
 // SecretManagerConfigProvider signals that the config knows how to configure a
@@ -84,7 +92,9 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 		if smConfig.SecretExpansion {
 			sm, err = secrets.WrapJSONExpander(ctx, sm)
 			if err != nil {
-				return ctx, nil, fmt.Errorf("unable to create json expander secret manager: %w", err)
+				return ctx, nil, fmt.Errorf(
+					"unable to create json expander secret manager: %w", err,
+				)
 			}
 		}
 
@@ -113,6 +123,22 @@ func SetupWith(ctx context.Context, config interface{}, l envconfig.Lookuper) (
 			}
 			ctx = logging.WithLogger(ctx, logging.NewLogger(logging.WithWriteSyncer(ws)))
 		}
+	}
+
+	if provider, ok := config.(ObservabilityExporterConfigProvider); ok {
+		log.Info("configuring observability exporter")
+
+		oeConfig := provider.ObservabilityExporterConfig()
+		oe, err := observability.NewFromEnv(ctx, oeConfig)
+		if err != nil {
+			return ctx, nil, fmt.Errorf("create observability provider: %w", err)
+		}
+		if err := oe.StartExporter(views.Register); err != nil {
+			return nil, nil, fmt.Errorf("start observability: %w", err)
+		}
+		serverEnvOpts = append(serverEnvOpts, serverenv.WithObservabilityExporter(oe))
+
+		log.Infow("observability", "config", oeConfig)
 	}
 
 	// Setup the database connection

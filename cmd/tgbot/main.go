@@ -8,10 +8,12 @@ import (
 	"strconv"
 
 	"github.com/alienvspredator/simple-tgbot/internal/logging"
+	"github.com/alienvspredator/simple-tgbot/internal/server"
 	"github.com/alienvspredator/simple-tgbot/internal/setup"
 	"github.com/alienvspredator/simple-tgbot/internal/tgbot"
 	"github.com/sethvargo/go-signalcontext"
 	"go.uber.org/multierr"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -42,11 +44,18 @@ func realMain(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("setup.Setup: %w", err)
 	}
-	defer env.Close(ctx)
+	defer func() {
+		if err := env.Close(ctx); err != nil {
+			log.Errorw("failed to close env", zap.Error(err))
+		}
+	}()
 
 	bot := tgbot.New(env, &config)
 
 	log.Info("starting bot")
 
+	if err := server.ServeMetricsIfPrometheus(ctx); err != nil {
+		return fmt.Errorf("serving metrics: %w", err)
+	}
 	return bot.Serve(ctx)
 }
